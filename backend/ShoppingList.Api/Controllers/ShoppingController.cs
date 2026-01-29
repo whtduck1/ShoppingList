@@ -31,5 +31,16 @@ namespace ShoppingList.Api.Controllers
             return Ok(item);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteItem(int id)
+        {
+            var item = await _context.ShoppingItems.FindAsync(id);
+            if (item == null) return NotFound();
+
+            _context.ShoppingItems.Remove(item);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
