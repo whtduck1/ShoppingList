@@ -1,6 +1,8 @@
-﻿namespace ShoppingList.Api.Hubs
+﻿using Microsoft.AspNetCore.SignalR;
+
+namespace ShoppingList.Api.Hubs
 {
-    public class ShoppingHub
+    public class ShoppingHub  : Hub
     {
     }
 }
