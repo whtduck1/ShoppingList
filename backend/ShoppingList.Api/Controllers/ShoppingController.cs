@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using ShoppingList.Api.Data;
+using ShoppingList.Api.Hubs;
 using ShoppingList.Api.Models;
 
 namespace ShoppingList.Api.Controllers
@@ -10,10 +12,12 @@ namespace ShoppingList.Api.Controllers
     public class ShoppingController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IHubContext<ShoppingHub> _hubContext;
 
-        public ShoppingController(AppDbContext context)
+        public ShoppingController(AppDbContext context, IHubContext<ShoppingHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -27,7 +31,7 @@ namespace ShoppingList.Api.Controllers
         {
             _context.ShoppingItems.Add(item);
             await _context.SaveChangesAsync();
-
+            await _hubContext.Clients.All.SendAsync("ReceiveItemsUpdate");
             return Ok(item);
         }
 
@@ -39,6 +43,8 @@ namespace ShoppingList.Api.Controllers
 
             _context.ShoppingItems.Remove(item);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("ReceiveItemsUpdate");
 
             return NoContent();
         }
