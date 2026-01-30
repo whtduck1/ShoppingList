@@ -5,7 +5,7 @@
     </div>
     <ul class="product-list">
         <li *ngFor="let item of items" [class.bought]="item.isBought">
-            <input type="checkbox" [(ngModel)]="item.isBought" />
+            <input type="checkbox" [checked]="item.isBought" (change)="onToggleBought(item)" />
             <span>{{ item.name }}</span>
             <button class="remove-btn" (click)="removeItem(item)">Usuń</button>
         </li>
