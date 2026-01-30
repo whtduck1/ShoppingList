@@ -48,5 +48,24 @@ namespace ShoppingList.Api.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateItem(int id, ShoppingItem item)
+        {
+            if (id != item.Id) return BadRequest();
+            _context.Entry(item).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceiveItemsUpdate");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.ShoppingItems.Any(e => e.Id == id)) return NotFound();
+                else throw;
+            }
+            return NoContent();
+        }
+
+        }
     }
-}
