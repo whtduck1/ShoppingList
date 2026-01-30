@@ -10,7 +10,7 @@ export interface ShoppingItem {
 
 @Injectable({ providedIn: 'root' })
 export class ShoppingService {
-    private apiUrl = 'https://localhost:5292/api/shopping'; // Ustaw właściwy port
+    private apiUrl = 'http://localhost:XXXX/api/shopping'; // Ustaw właściwy port
 
     constructor(private http: HttpClient) { }
 
